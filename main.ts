@@ -1,15 +1,30 @@
 //  Variables
 let MyList = [[0], [0]]
-let MyRecentlyPlacedCoinPos = [0, 0]
-//  Forget the values writen above. It gets overriten anyways
 let MyCoin = [2, 0]
+let MyRecentlyPlacedCoinPos = [0, 0]
+let CurrentPlayer = 0
+//  Forget the values writen above. Made to make the Python to JavaScript to TypeScript
+//  converter shut up. It gets overriten anyways
 let MyStates = [0, 1, 2]
 // Empty
 // Player one
 // Player two
 let vecX = 0
 let vecY = 0
-let CurrentPlayer = Math.round(Math.random() + 1)
+function new_game() {
+    
+    
+    for (let row = 0; row < 5; row++) {
+        MyList.insertAt(row, [0])
+        for (let col = 0; col < 5; col++) {
+            MyList[row][col] = 0
+        }
+    }
+    MyCoin = [2, 0]
+    CurrentPlayer = Math.round(Math.random() + 1)
+    draw()
+}
+
 function draw() {
     // basic.clear_screen()
     for (let r = 0; r < 5; r++) {
@@ -21,22 +36,16 @@ function draw() {
     led.plotBrightness(MyCoin[0], MyCoin[1], 255 / CurrentPlayer)
 }
 
-//  Those parameter name are not "correct". But I don't know what else to call them
-//  I'm, regrettably, too lazy to look it up
-function myRange(iterator: any, condition: any, modifier: any) {
-    while (iterator > condition) {
-        iterator += modifier
-    }
+function game_won() {
+    led.setBrightness(255 / CurrentPlayer)
+    basic.showNumber(CurrentPlayer)
+    basic.showString("WON")
+    new_game()
 }
 
-//  ^ unfinished.
 //  Setup 
-for (let row = 0; row < 5; row++) {
-    MyList.push([0])
-    for (let col = 0; col < 5; col++) {
-        MyList[row][col] = 0
-    }
-}
+new_game()
+//  Events
 input.onButtonPressed(Button.A, function on_button_pressed_a() {
     
     MyCoin[0] -= MyCoin[0] > 0 ? 1 : 0
@@ -61,7 +70,6 @@ input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
                 //  yes! place coin and save it's position temporarly. then exit the loop
                 MyList[row][col] = CurrentPlayer
                 MyRecentlyPlacedCoinPos = [row, col]
-                console.logValue("[Phyt] MyRecentlyPlacedCoinPos", MyRecentlyPlacedCoinPos)
                 break
             }
             
@@ -69,6 +77,7 @@ input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
     }
     
     function checkForMatches() {
+        let matches: number;
         let vecX: number;
         let vecY: number;
         
@@ -76,7 +85,7 @@ input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
         for (let x = -1; x < 2; x += 1) {
             for (let y = -1; y < 2; y += 1) {
                 if (!(x == 0 && y == 0)) {
-                    for (let matches = 0; matches < 4; matches++) {
+                    for (matches = 0; matches < 4; matches++) {
                         //  Fail safe. The absolute value may never go below 0,0 and over 4,4
                         vecX = MyRecentlyPlacedCoinPos[0] + x * matches
                         vecY = MyRecentlyPlacedCoinPos[1] + y * matches
@@ -91,6 +100,10 @@ input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
                         }
                         
                     }
+                    if (matches == 4) {
+                        game_won()
+                    }
+                    
                 }
                 
             }
@@ -102,4 +115,3 @@ input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
     CurrentPlayer = CurrentPlayer == 1 ? 2 : 1
     draw()
 })
-draw()

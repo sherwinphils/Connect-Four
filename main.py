@@ -1,9 +1,11 @@
 # Variables
 MyList = [[0],[0]] 
-MyRecentlyPlacedCoinPos = [0,0]
-# Forget the values writen above. It gets overriten anyways
-
 MyCoin = [2,0]
+MyRecentlyPlacedCoinPos = [0,0]
+CurrentPlayer = 0
+# Forget the values writen above. Made to make the Python to JavaScript to TypeScript
+# converter shut up. It gets overriten anyways
+
 MyStates = [
     0,  #Empty
     1,  #Player one
@@ -12,7 +14,21 @@ MyStates = [
 
 vecX = 0
 vecY = 0
-CurrentPlayer = Math.round(Math.random()+1)
+
+def new_game():
+    global MyCoin
+    global CurrentPlayer
+
+    for row in range(5):
+        MyList.insert_at(row, [0])
+        for col in range(5):
+            MyList[row][col] = 0
+
+    MyCoin = [2,0]
+    CurrentPlayer = Math.round(Math.random() + 1)
+    draw()
+    
+    
 
 def draw():
     #basic.clear_screen()
@@ -22,12 +38,12 @@ def draw():
             led.plot_brightness(r, c, 255/MyList[r][c])
     led.plot_brightness(MyCoin[0], MyCoin[1], 255/CurrentPlayer)
 
-# Those parameter name are not "correct". But I don't know what else to call them
-# I'm, regrettably, too lazy to look it up
-def myRange(iterator, condition, modifier):
-    while iterator > condition:
-        iterator += modifier
-# ^ unfinished.
+
+def game_won():
+    led.set_brightness(255/CurrentPlayer)
+    basic.show_number(CurrentPlayer)
+    basic.show_string("WON")
+    new_game()
 
 def on_button_pressed_a():
     global MyCoin
@@ -55,7 +71,6 @@ def on_button_pressed_ab():
                 # yes! place coin and save it's position temporarly. then exit the loop
                 MyList[row][col] = CurrentPlayer
                 MyRecentlyPlacedCoinPos = [row, col]
-                console.log_value("[Phyt] MyRecentlyPlacedCoinPos", MyRecentlyPlacedCoinPos)
                 break
 
     def checkForMatches():
@@ -76,6 +91,9 @@ def on_button_pressed_ab():
                             console.log_value("[Phyt] Match!", matches + 1)
                         else:
                             break
+                        
+                    if matches == 4:
+                        game_won()
 
                 
 
@@ -86,14 +104,9 @@ def on_button_pressed_ab():
     draw()
 
 # Setup 
-for row in range(5):
-    MyList.append([0])
-    for col in range(5):
-        MyList[row][col] = 0
+new_game()
 
-
+# Events
 input.on_button_pressed(Button.A, on_button_pressed_a)
 input.on_button_pressed(Button.B, on_button_pressed_b)
 input.on_button_pressed(Button.AB, on_button_pressed_ab)
-
-draw()
