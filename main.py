@@ -46,7 +46,6 @@ def game_won():
 def on_button_pressed_a():
     global MyCoin
     MyCoin[0] -= 1 if MyCoin[0] > 0 else 0; draw()
-    draw()
 
 def on_button_pressed_b():
     global MyCoin
