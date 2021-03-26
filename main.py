@@ -21,10 +21,10 @@ def new_game():
         for col in range(5):
             MyList[row][col] = 0
 
-    basic.clear_screen()
-    led.set_brightness(255)
     MyCoin = [2,0]
-    CurrentPlayer = Math.round(Math.random() + 1)
+    CurrentPlayer = randint(1,2)
+    led.set_brightness(255)
+
     draw()
     
     

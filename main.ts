@@ -17,10 +17,9 @@ function new_game() {
             MyList[row][col] = 0
         }
     }
-    basic.clearScreen()
-    led.setBrightness(255)
     MyCoin = [2, 0]
-    CurrentPlayer = Math.round(Math.random() + 1)
+    CurrentPlayer = randint(1, 2)
+    led.setBrightness(255)
     draw()
 }
 
