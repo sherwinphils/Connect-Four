@@ -49,8 +49,8 @@ input.onButtonPressed(Button.B, function on_button_pressed_b() {
 })
 input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
     //  Placeholder variable
+    
     function placeCoin() {
-        
         
         let row = MyCoin[0]
         //  Reversed and range(5,-1,-1) does not work. Guess I got to improvise)
@@ -60,8 +60,8 @@ input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
             if (MyList[row][col] == 0) {
                 //  yes! place coin and save it's position temporarly. then exit the loop
                 MyList[row][col] = CurrentPlayer
-                CurrentPlayer = CurrentPlayer == 1 ? 2 : 1
                 MyRecentlyPlacedCoinPos = [row, col]
+                console.logValue("[Phyt] MyRecentlyPlacedCoinPos", MyRecentlyPlacedCoinPos)
                 break
             }
             
@@ -70,30 +70,36 @@ input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
     
     function checkForMatches() {
         let vecX: number;
+        let vecY: number;
         
-        console.logValue("From Phyt: ", MyRecentlyPlacedCoinPos)
+        console.logValue("[Phyt] MyRecentlyPlacedCoinPos", MyRecentlyPlacedCoinPos)
         for (let x = -1; x < 2; x += 1) {
             for (let y = -1; y < 2; y += 1) {
-                for (let matches = 0; matches < 4; matches++) {
-                    //  Fail safe. The absolute value may never go below 0,0 and over 4,4
-                    vecX = MyRecentlyPlacedCoinPos[0] + x * matches
-                    vecX = MyRecentlyPlacedCoinPos[1] + y * matches
-                    if (vecX > 4 || vecX < 0 || vecY > 4 || vecY < 0) {
-                        break
+                if (!(x == 0 && y == 0)) {
+                    for (let matches = 0; matches < 4; matches++) {
+                        //  Fail safe. The absolute value may never go below 0,0 and over 4,4
+                        vecX = MyRecentlyPlacedCoinPos[0] + x * matches
+                        vecY = MyRecentlyPlacedCoinPos[1] + y * matches
+                        if (vecX > 4 || vecX < 0 || vecY > 4 || vecY < 0) {
+                            break
+                        }
+                        
+                        if (MyList[vecX][vecY] == CurrentPlayer) {
+                            console.logValue("[Phyt] Match!", matches + 1)
+                        } else {
+                            break
+                        }
+                        
                     }
-                    
-                    console.logValue("From Phyt: ", MyList[vecX][vecY])
-                    if (MyList[vecX][vecY] == 1) {
-                        console.log("Match!")
-                    }
-                    
                 }
+                
             }
         }
     }
     
     placeCoin()
     checkForMatches()
+    CurrentPlayer = CurrentPlayer == 1 ? 2 : 1
     draw()
 })
 draw()

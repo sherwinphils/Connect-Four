@@ -41,10 +41,10 @@ def on_button_pressed_b():
 
 def on_button_pressed_ab():
     # Placeholder variable
+    global CurrentPlayer
 
     def placeCoin():
         global MyRecentlyPlacedCoinPos
-        global CurrentPlayer
         row = MyCoin[0]
 
         # Reversed and range(5,-1,-1) does not work. Guess I got to improvise)
@@ -54,34 +54,35 @@ def on_button_pressed_ab():
             if MyList[row][col] == 0:
                 # yes! place coin and save it's position temporarly. then exit the loop
                 MyList[row][col] = CurrentPlayer
-                CurrentPlayer = 2 if CurrentPlayer == 1 else 1
                 MyRecentlyPlacedCoinPos = [row, col]
+                console.log_value("[Phyt] MyRecentlyPlacedCoinPos", MyRecentlyPlacedCoinPos)
                 break
 
     def checkForMatches():
         global MyRecentlyPlacedCoinPos
-
-        console.log_value("From Phyt: ", MyRecentlyPlacedCoinPos)
+        console.log_value("[Phyt] MyRecentlyPlacedCoinPos", MyRecentlyPlacedCoinPos)
         for x in range(-1, 2, 1):
             for y in range(-1, 2, 1):
+                if not (x == 0 and y == 0):
+                    for matches in range(4):
+                        # Fail safe. The absolute value may never go below 0,0 and over 4,4
+                        vecX = MyRecentlyPlacedCoinPos[0] + (x * matches)
+                        vecY = MyRecentlyPlacedCoinPos[1] + (y * matches)
 
-                for matches in range(4):
-                    # Fail safe. The absolute value may never go below 0,0 and over 4,4
-                    vecX = MyRecentlyPlacedCoinPos[0] + (x * matches)
-                    vecX = MyRecentlyPlacedCoinPos[1] + (y * matches)
+                        if vecX > 4 or vecX < 0 or vecY > 4 or vecY < 0:
+                            break
 
-                    if vecX > 4 or vecX < 0 or vecY > 4 or vecY < 0:
-                        break
+                        if MyList[vecX][vecY] == CurrentPlayer:
+                            console.log_value("[Phyt] Match!", matches + 1)
+                        else:
+                            break
 
-                    console.log_value("From Phyt: ", MyList[vecX][vecY])
-                    if MyList[vecX][vecY] == 1:
-                        console.log("Match!")
                 
-                
-
 
     placeCoin()
     checkForMatches()
+    CurrentPlayer = 2 if CurrentPlayer == 1 else 1
+    
     draw()
 
 # Setup 
