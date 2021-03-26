@@ -1,12 +1,18 @@
 # Variables
-MyList = [[0],[0]] # Forget the values writen here. It get's overriten anyways
+MyList = [[0],[0]] 
+MyRecentlyPlacedCoinPos = [0,0]
+# Forget the values writen above. It gets overriten anyways
+
 MyCoin = [2,0]
-CurrentPlayer = Math.round(Math.random()+1)
 MyStates = [
     0,  #Empty
     1,  #Player one
     2,  #Player two
 ]
+
+vecX = 0
+vecY = 0
+CurrentPlayer = Math.round(Math.random()+1)
 
 def draw():
     #basic.clear_screen()
@@ -17,12 +23,11 @@ def draw():
     led.plot_brightness(MyCoin[0], MyCoin[1], 255/CurrentPlayer)
 
 # Those parameter name are not "correct". But I don't know what else to call them
-# I'm also too lazy to look it up
+# I'm, regrettably, too lazy to look it up
 def myRange(iterator, condition, modifier):
     while iterator > condition:
         iterator += modifier
-# ^ unfinished. lol
-#
+# ^ unfinished.
 
 def on_button_pressed_a():
     global MyCoin
@@ -35,9 +40,10 @@ def on_button_pressed_b():
     draw()
 
 def on_button_pressed_ab():
-    #global MyCoin
+    # Placeholder variable
 
     def placeCoin():
+        global MyRecentlyPlacedCoinPos
         global CurrentPlayer
         row = MyCoin[0]
 
@@ -46,21 +52,32 @@ def on_button_pressed_ab():
         while col > 1:
             col -= 1
             if MyList[row][col] == 0:
-                # yes! place coin and exit loop
+                # yes! place coin and save it's position temporarly. then exit the loop
                 MyList[row][col] = CurrentPlayer
                 CurrentPlayer = 2 if CurrentPlayer == 1 else 1
-
+                MyRecentlyPlacedCoinPos = [row, col]
                 break
 
     def checkForMatches():
-        vector = [-1,-1]
+        global MyRecentlyPlacedCoinPos
+
+        console.log_value("From Phyt: ", MyRecentlyPlacedCoinPos)
         for x in range(-1, 2, 1):
             for y in range(-1, 2, 1):
-                console.log(x + " : " + y)
 
+                for matches in range(4):
+                    # Fail safe. The absolute value may never go below 0,0 and over 4,4
+                    vecX = MyRecentlyPlacedCoinPos[0] + (x * matches)
+                    vecX = MyRecentlyPlacedCoinPos[1] + (y * matches)
 
+                    if vecX > 4 or vecX < 0 or vecY > 4 or vecY < 0:
+                        break
 
-
+                    console.log_value("From Phyt: ", MyList[vecX][vecY])
+                    if MyList[vecX][vecY] == 1:
+                        console.log("Match!")
+                
+                
 
 
     placeCoin()
@@ -72,6 +89,7 @@ for row in range(5):
     MyList.append([0])
     for col in range(5):
         MyList[row][col] = 0
+
 
 input.on_button_pressed(Button.A, on_button_pressed_a)
 input.on_button_pressed(Button.B, on_button_pressed_b)
