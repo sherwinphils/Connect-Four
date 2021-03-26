@@ -8,7 +8,7 @@ let MyStates = [0, 1, 2]
 // Player one
 // Player two
 function draw() {
-    basic.clearScreen()
+    // basic.clear_screen()
     for (let r = 0; r < 5; r++) {
         for (let c = 0; c < 5; c++) {
             console.log(MyList[r][c])
@@ -18,6 +18,16 @@ function draw() {
     led.plotBrightness(MyCoin[0], MyCoin[1], 255 / CurrentPlayer)
 }
 
+//  Those parameter name are not "correct". But I don't know what else to call them
+//  I'm also too lazy to look it up
+function myRange(iterator: any, condition: any, modifier: any) {
+    while (iterator > condition) {
+        iterator += modifier
+    }
+}
+
+//  ^ unfinished. lol
+// 
 //  Setup 
 for (let row = 0; row < 5; row++) {
     MyList.push([0])
@@ -36,25 +46,35 @@ input.onButtonPressed(Button.B, function on_button_pressed_b() {
     draw()
 })
 input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
+    // global MyCoin
     function placeCoin() {
-        let CurrentPlayer: number;
-        let col = MyCoin[0]
-        console.log("Called")
-        console.log(row)
-        for (let row = 5; row < -1; row += -1) {
-            console.log("No")
-            // console.log_value("Test", row)
-            //  Is field empty?
+        
+        let row = MyCoin[0]
+        //  Reversed and range(5,-1,-1) does not work. Guess I got to improvise)
+        let col = 5
+        while (col > 1) {
+            col -= 1
             if (MyList[row][col] == 0) {
-                //  yes! place coin
+                //  yes! place coin and exit loop
                 MyList[row][col] = CurrentPlayer
-                CurrentPlayer = Math.round(Math.random() + 1)
+                CurrentPlayer = CurrentPlayer == 1 ? 2 : 1
+                break
             }
             
         }
     }
     
+    function checkForMatches() {
+        let vector = [-1, -1]
+        for (let x = -1; x < 2; x += 1) {
+            for (let y = -1; y < 2; y += 1) {
+                console.log(x + " : " + y)
+            }
+        }
+    }
+    
     placeCoin()
+    checkForMatches()
     draw()
 })
 draw()
