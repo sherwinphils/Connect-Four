@@ -3,7 +3,7 @@ let MyList = [[0], [0]]
 let MyCoin = [2, 0]
 let CurrentPlayer = 0
 //  Forget the values writen above. Made to make the Python to JavaScript to TypeScript
-//  converter shut up. Those values are going to be overwritten anyways
+//  converter "stop complaining".
 let MyStates = [0, 1, 2]
 // Empty
 // Player one
@@ -63,6 +63,7 @@ input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
     //  So I decided a while loop should suffice
     let row = MyCoin[0]
     let col = 4
+    //  This drops the coin; By counting "up" the Y axis
     while (col > 0) {
         if (MyList[row][col] == 0) {
             MyList[row][col] = CurrentPlayer

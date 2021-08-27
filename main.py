@@ -3,7 +3,7 @@ MyList = [[0],[0]]
 MyCoin = [2,0]
 CurrentPlayer = 0
 # Forget the values writen above. Made to make the Python to JavaScript to TypeScript
-# converter shut up. Those values are going to be overwritten anyways
+# converter "stop complaining".
 
 MyStates = [
     0,  #Empty
@@ -47,9 +47,11 @@ def on_button_pressed_a():
     global MyCoin
     MyCoin[0] -= 1 if MyCoin[0] > 0 else 0; draw()
 
+
 def on_button_pressed_b():
     global MyCoin
     MyCoin[0] += 1 if MyCoin[0] < 4 else 0; draw()
+
 
 def on_button_pressed_ab():
     global CurrentPlayer
@@ -61,6 +63,8 @@ def on_button_pressed_ab():
     # So I decided a while loop should suffice
     row = MyCoin[0]
     col = 4
+
+    # This drops the coin; By counting "up" the Y axis
     while col > 0:
         if MyList[row][col] == 0:
             MyList[row][col] = CurrentPlayer
